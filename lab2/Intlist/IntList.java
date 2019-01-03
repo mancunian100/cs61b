@@ -84,23 +84,21 @@ public class IntList {
         //TODO:  fill in method
 
         /* iterative method */
-        IntList p = new IntList(0, A);
-        while(p.rest != null) {
-            p = p.rest;
-        }
-        p.rest = B;
-        return A;
+//        IntList p = new IntList(0, A);
+//        while(p.rest != null) {
+//            p = p.rest;
+//        }
+//        p.rest = B;
+//        return A;
 
         /* recursive method */
-//        if(A == null) {
-//            return B;
-//        } else if(A.rest == null) {
-//            A.rest = B;
-//            return A;
-//        } else {
-//            IntList p = new IntList(A.first, null);
-//            return dcatenate(p, dcatenate(A.rest, B));
-//        }
+        if(A == null) {
+            return B;
+        } else {
+            A.rest = dcatenate(A.rest, B);
+            return A;
+        }
+
     }
 
     /**
@@ -128,13 +126,9 @@ public class IntList {
         /* recursive method */
         if(A == null) {
             return B;
-        } else if(A.rest == null) {
-            IntList p = new IntList(A.first, null);
-            p.rest = B;
-            return p;
         } else {
-            IntList p = new IntList(A.first, null);
-            return catenate(p, catenate(A.rest, B));
+            IntList p = new IntList(A.first, catenate(A.rest, B));
+            return p;
         }
 
     }
