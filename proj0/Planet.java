@@ -15,12 +15,6 @@ public class Planet {
     /** constructor with 6 instance variables */
     public Planet(double xP, double yP, double xV,
                   double yV, double m, String img) {
-//        this.xxPos = xP;
-//        this.yyPos = yP;
-//        this.xxVel = xV;
-//        this.yyVel = yV;
-//        this.mass = m;
-//        this.imgFileName = img;
         xxPos = xP;
         yyPos = yP;
         xxVel = xV;
@@ -30,12 +24,13 @@ public class Planet {
     }
     /** constructor with a Planet instance */
     public Planet(Planet p) {
-        xxPos = p.xxPos;
-        yyPos = p.yyPos;
-        xxVel = p.xxPos;
-        yyVel = p.yyVel;
-        mass = p.mass;
-        imgFileName = p.imgFileName;
+//        xxPos = p.xxPos;
+//        yyPos = p.yyPos;
+//        xxVel = p.xxPos;
+//        yyVel = p.yyVel;
+//        mass = p.mass;
+//        imgFileName = p.imgFileName;
+        this(p.xxPos, p.yyPos, p.xxVel, p.yyVel, p.mass, p.imgFileName);
     }
 
     /** return a double equal to the distance between the two planets */
