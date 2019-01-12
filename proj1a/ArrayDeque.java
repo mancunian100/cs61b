@@ -139,10 +139,10 @@ public class ArrayDeque<T> {
         if (size == 0) {
             return null;
         }
-        if (items.length > 15 && size - 1 < 0.25 * items.length) {
+        size -= 1;
+        if (items.length > 15 && size < 0.25 * items.length) {
             resize((int) (items.length * 0.5));
         }
-        size -= 1;
         int indexLast = nextLast - 1;
         if (indexLast < 0) {
             indexLast += items.length;

@@ -58,7 +58,7 @@ public class ArrayDequeTest {
         }
 //        ad3.printDeque();
         for (int i = 0; i < 33; i++) {
-            ad3.removeFirst();
+            ad3.removeLast();
         }
         ad3.printDeque();
         assertEquals(true, ad3.isEmpty());
