@@ -3,7 +3,7 @@
  * @author mancunian100
  */
 
-public class LinkedListDeque<Item> {
+public class LinkedListDeque<T> {
 
     /**
      * nested Item list class ItemNode.
@@ -12,7 +12,7 @@ public class LinkedListDeque<Item> {
         /**
          * the Item of a ItemNode.
          */
-        private Item item;
+        private T item;
         /**
          * the previous ItemNode.
          */
@@ -25,7 +25,7 @@ public class LinkedListDeque<Item> {
         /**
          * a ItemNode with a Item I, previous ItemNode P and next ItemNode N.
          */
-        private ItemNode(Item i, ItemNode p, ItemNode n) {
+        private ItemNode(T i, ItemNode p, ItemNode n) {
             item = i;
             prev = p;
             next = n;
@@ -41,13 +41,13 @@ public class LinkedListDeque<Item> {
      */
     private int size;
 
-    /**
-     * create an List with one ItemNode with input Item I,
-     * previous ItemNode P and next ItemNode N.
-     */
-    public LinkedListDeque(Item i, ItemNode p, ItemNode n) {
-        sentinel = new ItemNode(null, p, n);
-    }
+//    /**
+//     * create an List with one ItemNode with input Item I,
+//     * previous ItemNode P and next ItemNode N.
+//     */
+//    public LinkedListDeque(Item i, ItemNode p, ItemNode n) {
+//        sentinel = new ItemNode(null, p, n);
+//    }
 
     /**
      * create an empty ItemNode.
@@ -64,7 +64,7 @@ public class LinkedListDeque<Item> {
      * Args: I, the new first Item
      * Returns: nothing
      */
-    public void addFirst(Item i) {
+    public void addFirst(T i) {
         sentinel.next = new ItemNode(i, sentinel, sentinel.next);
         sentinel.next.next.prev = sentinel.next;
         size += 1;
@@ -75,7 +75,7 @@ public class LinkedListDeque<Item> {
      * Args: I, the new last Item
      * Returns: nothing
      */
-    public void addLast(Item i) {
+    public void addLast(T i) {
         sentinel.prev = new ItemNode(i, sentinel.prev, sentinel);
         sentinel.prev.prev.next = sentinel.prev;
         size += 1;
@@ -115,11 +115,11 @@ public class LinkedListDeque<Item> {
      * Args: nothing
      * Returns: I, the first Item of the LinkedList
      */
-    public Item removeFirst() {
+    public T removeFirst() {
         if (sentinel.next == sentinel) {
             return null;
         } else {
-            Item firstItem = sentinel.next.item;
+            T firstItem = sentinel.next.item;
             sentinel.next = sentinel.next.next;
             sentinel.next.prev = sentinel;
             size -= 1;
@@ -132,11 +132,11 @@ public class LinkedListDeque<Item> {
      * Args: nothing
      * Returns: I, the last Item of the LinkedList
      */
-    public Item removeLast() {
+    public T removeLast() {
         if (sentinel.prev == sentinel) {
             return null;
         } else {
-            Item lastItem = sentinel.prev.item;
+            T lastItem = sentinel.prev.item;
             sentinel.prev = sentinel.prev.prev;
             sentinel.prev.next = sentinel;
             size -= 1;
@@ -149,7 +149,7 @@ public class LinkedListDeque<Item> {
      * Args: I (int), the index of the Item need to get
      * Returns: item (Item), the ith Item we get
      */
-    public Item get(int i) {
+    public T get(int i) {
         if (i >= size) {
             return null;
         } else {
@@ -168,7 +168,7 @@ public class LinkedListDeque<Item> {
      * Args: I (int), the index of the Item need to get
      * Returns: item (Item), the ith Item we get
      */
-    public Item getRecursive(int i) {
+    public T getRecursive(int i) {
         if (i >= size) {
             return null;
         } else {
@@ -182,7 +182,7 @@ public class LinkedListDeque<Item> {
      * Args: I, input ItemNode, C, counter
      * Returns: ItemNode, output ItemNode, C, counter
      */
-    public Item recursive(ItemNode i, int count) {
+    public T recursive(ItemNode i, int count) {
         if (count == 0) {
             return i.next.item;
         } else {
