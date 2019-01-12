@@ -27,6 +27,9 @@ public class ArrayDeque<T> {
         if (nextFirst >= l) {
             nextFirst -= l;
         }
+        if (nextLast >= l) {
+            nextLast -= l;
+        }
         for (int i = 0; i < size; i++) {
             if (nextFirst + 1 + i >= l) {
                 newItems[nextFirst + 1 + i - l] = items[nextFirst + 1 + i];
@@ -103,11 +106,15 @@ public class ArrayDeque<T> {
             return null;
         }
         size -= 1;
-        if (size < 0.25 * items.length) {
+        if (items.length > 8 && size < 0.25 * items.length) {
             resize((int) (items.length * 0.5));
         }
-        T oldFirst = items[nextFirst + 1];
-        items[nextFirst + 1] = null;
+        int index = nextFirst + 1;
+        if (index >= items.length) {
+            index -= items.length;
+        }
+        T oldFirst = items[index];
+        items[index] = null;
         nextFirst += 1;
         return oldFirst;
     }
@@ -120,7 +127,7 @@ public class ArrayDeque<T> {
             return null;
         }
         size -= 1;
-        if (size < 0.25 * items.length) {
+        if (items.length > 8 && size < 0.25 * items.length) {
             resize((int) (items.length * 0.5));
         }
         T oldLast = items[nextLast - 1];

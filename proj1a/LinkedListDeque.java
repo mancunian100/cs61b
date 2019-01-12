@@ -182,7 +182,7 @@ public class LinkedListDeque<T> {
      * Args: I, input ItemNode, C, counter
      * Returns: ItemNode, output ItemNode, C, counter
      */
-    public T recursive(ItemNode i, int count) {
+    private T recursive(ItemNode i, int count) {
         if (count == 0) {
             return i.next.item;
         } else {
