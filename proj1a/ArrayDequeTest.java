@@ -48,4 +48,19 @@ public class ArrayDequeTest {
         assertEquals(8, ad2.size());
         assertEquals("h", ad2.get(7));
     }
+
+    /** test removeFirst. */
+    @Test
+    public void testRemoveFirst() {
+        ArrayDeque<String> ad3 = new ArrayDeque<>();
+        for (int i = 0; i < 33; i++) {
+            ad3.addLast("h");
+        }
+//        ad3.printDeque();
+        for (int i = 0; i < 33; i++) {
+            ad3.removeFirst();
+        }
+        ad3.printDeque();
+        assertEquals(true, ad3.isEmpty());
+    }
 }
