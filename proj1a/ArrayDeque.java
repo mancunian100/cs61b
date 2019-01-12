@@ -8,9 +8,9 @@ public class ArrayDeque<T> {
     /** the size of array. */
     private int size;
     /** the pointer of the new first Item. */
-    public int nextFirst;
+    private int nextFirst;
     /** the pointer of the new last Item. */
-    public int nextLast;
+    private int nextLast;
 
     /** create an empty item array. */
     public ArrayDeque() {
@@ -126,6 +126,9 @@ public class ArrayDeque<T> {
         T oldFirst = items[index];
         items[index] = null;
         nextFirst += 1;
+        if (nextFirst + 1 > items.length) {
+            nextFirst -= items.length;
+        }
         return oldFirst;
     }
 
@@ -143,6 +146,9 @@ public class ArrayDeque<T> {
         T oldLast = items[nextLast - 1];
         items[nextLast - 1] = null;
         nextLast -= 1;
+        if (nextLast < 0) {
+            nextLast += items.length;
+        }
         return oldLast;
     }
 
