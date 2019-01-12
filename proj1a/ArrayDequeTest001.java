@@ -32,13 +32,20 @@ public class ArrayDequeTest {
     @Test
     public void testResize() {
         ArrayDeque<String> ad2 = new ArrayDeque<>();
-        for (int i = 0; i < 17; i++) {
+        for (int i = 0; i < 8; i++) {
             ad2.addFirst("h");
         }
-        assertEquals(17, ad2.size());
-        for (int i = 0; i < 10; i++) {
+        assertEquals(8, ad2.size());
+        assertEquals("h", ad2.get(7));
+        for (int i = 0; i < 8; i++) {
             ad2.removeLast();
         }
-        assertEquals(7, ad2.size());
+        assertEquals(0, ad2.size());
+        assertEquals(null, ad2.get(7));
+        for (int i = 0; i < 8; i++) {
+            ad2.addFirst("h");
+        }
+        assertEquals(8, ad2.size());
+        assertEquals("h", ad2.get(7));
     }
 }

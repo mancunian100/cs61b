@@ -103,8 +103,8 @@ public class ArrayDeque<T> {
             int index = nextFirst + i + 1;
             if (index >= items.length) {
                 index -= items.length;
-                System.out.print(items[index] + " ");
             }
+            System.out.print(items[index] + " ");
         }
     }
 
