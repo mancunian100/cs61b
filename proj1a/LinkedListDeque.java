@@ -168,12 +168,12 @@ public class LinkedListDeque<Item> {
      * Args: I (int), the index of the Item need to get
      * Returns: item (Item), the ith Item we get
      */
-    public Item getRecursion(int i) {
+    public Item getRecursive(int i) {
         if (i >= size) {
             return null;
         } else {
             int count = i;
-            return recursion(sentinel, i);
+            return recursive(sentinel, i);
         }
     }
 
@@ -182,11 +182,11 @@ public class LinkedListDeque<Item> {
      * Args: I, input ItemNode, C, counter
      * Returns: ItemNode, output ItemNode, C, counter
      */
-    public Item recursion(ItemNode i, int count) {
+    public Item recursive(ItemNode i, int count) {
         if (count == 0) {
             return i.next.item;
         } else {
-            return recursion(i.next, count - 1);
+            return recursive(i.next, count - 1);
         }
     }
 }
