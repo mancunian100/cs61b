@@ -7,6 +7,7 @@ import org.junit.Test;
 
 public class TestArrayDequeGold {
 
+    /**
     @Test
     public void testArrayDeque() {
         StudentArrayDeque<Integer> sad1 = new StudentArrayDeque<>();
@@ -38,6 +39,53 @@ public class TestArrayDequeGold {
             }
             assertEquals("addFirst()", a, s);
         }
+    }
+    */
+
+    // for task 2
+    @Test
+    public void testWithMsg() {
+        StudentArrayDeque stu = new StudentArrayDeque<Integer>();
+        ArrayDequeSolution sol = new ArrayDequeSolution<Integer>();
+
+        for (int i = 0; i <= 10; i++) {
+            int last = StdRandom.uniform(11, 20);
+
+            stu.addLast(last);
+            sol.addLast(last);
+
+        }
+
+        String msg = helper1(sol);
+        for (int i = 0; i <= 10; i++) {
+
+            Object expected = sol.removeLast();
+            Object actual = stu.removeLast();
+
+            assertEquals(helper(i, msg), expected, actual);
+        }
+
+
+    }
+
+    private String helper1(ArrayDequeSolution<Integer> ads) {
+        String newMsg;
+        String res = "Oh noooo!\n   This is bad:\n   Related Operation:\n";
+
+        for(int i = 0; i<10; i++) {
+            newMsg = "   addLast(" + ads.get(i) + ");\n";
+            res += newMsg;
+        }
+
+        return res;
+    }
+
+    private String helper(int len, String msg) {
+
+        for (int i = 0; i<len; i++) {
+            msg += "   removeLast();\n";
+        }
+        return msg;
     }
 
 }
