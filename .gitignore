@@ -8,3 +8,6 @@ out
 
 # Java
 *.class
+
+# data
+library-sp18
