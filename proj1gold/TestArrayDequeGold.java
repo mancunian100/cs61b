@@ -36,7 +36,7 @@ public class TestArrayDequeGold {
                 s = sad1.removeLast();
                 a = ad1.removeLast();
             }
-            assertEquals("removeFirst(), removeLast()", a, s);
+            assertEquals("removeFirst()", a, s);
         }
     }
 
