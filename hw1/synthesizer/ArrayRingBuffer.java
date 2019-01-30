@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> implements Iterable<T>  {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -30,6 +30,28 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         last = 0;
         this.fillCount = 0;
         this.capacity = capacity;
+    }
+
+    public Iterator<T> iterator() {
+        return new KeyIterator();
+    }
+
+    private class KeyIterator implements Iterator<T> {
+        private int p;
+
+        public KeyIterator() {
+            p = 0;
+        }
+
+        public boolean hasNext() {
+            return p < fillCount;
+        }
+
+        public T next() {
+            T returnVal = rb[p];
+            p += 1;
+            return returnVal;
+        }
     }
 
     /**
