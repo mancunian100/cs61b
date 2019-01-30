@@ -49,9 +49,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /**
      * Helper method to get the private array rb.
      */
-    T[] getRb() {
-        return rb;
-    }
+//    T[] getRb() {
+//        return rb;
+//    }
 
     /**
      * Adds x to the end of the ring buffer. If there is no room, then
