@@ -6,7 +6,7 @@ package synthesizer;
  * Created by mancunian100.
  */
 
-public interface BoundedQueue<T> {
+public interface BoundedQueue<T> extends Iterable<T> {
 
     /** return the size of the buffer. */
     int capacity();
