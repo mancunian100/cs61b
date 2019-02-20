@@ -1,4 +1,5 @@
 package synthesizer;
+import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -39,6 +40,20 @@ public class TestArrayRingBuffer {
         expected = new Integer[]{10, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 //        assertEquals(expected, arb.getRb());
         assertTrue(arb.isFull());
+    }
+
+    /** test the iteration. */
+    @Test
+    public void testIteration() {
+        ArrayRingBuffer<Integer> arb = new ArrayRingBuffer<>(10);
+
+        for (int i = 0; i < arb.capacity; i += 1) {
+            arb.enqueue(i+1);
+        }
+
+        for (int i : arb) {
+            System.out.print(i + " ");
+        }
     }
 
     /** Calls tests for ArrayRingBuffer. */
