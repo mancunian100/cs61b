@@ -6,15 +6,15 @@ import static org.junit.Assert.*;
 
 public class Percolation {
     /** the grid of percolation system. */
-    int[][] grid;
+    private int[][] grid;
     /** number of open sites. */
-    int sizeOfOpen;
+    private int sizeOfOpen;
     /** a WeightedQuickUnionUF instance. */
-    WeightedQuickUnionUF WQU;
+    private WeightedQuickUnionUF WQU;
     /** represent the top node. */
-    int top;
+    private int top;
     /** represent the bottom node. */
-    int bottom;
+    private int bottom;
 
     /** create N-by-N grid, with all sites initially blocked. */
     public Percolation(int N) {
