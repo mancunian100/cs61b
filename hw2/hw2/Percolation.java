@@ -74,10 +74,10 @@ public class Percolation {
             if (index <= N) {
                 WQU.union(top, index);
             }
-            /** check if at bottom. */
-            if (index > N * N - N) {
-                WQU.union(bottom, index);
-            }
+//            /** check if at bottom. */
+//            if (index > N * N - N) {
+//                WQU.union(bottom, index);
+//            }
             /** check neighbors. */
             if (row > 0 && isOpen(row - 1, col)) {
                 WQU.union(index, xyTo1D(row - 1, col));
@@ -120,7 +120,12 @@ public class Percolation {
 
     /** does the system percolate? */
     public boolean percolates() {
-        return WQU.connected(top, bottom);
+//        return WQU.connected(top, bottom);
+        int N = grid.length;
+        for (int i = N * N - N + 1; i < N * N + 1; i += 1) {
+            if (WQU.connected(top, i)) {return true;}
+        }
+        return false;
     }
 
     public static void main(String[] args) {
