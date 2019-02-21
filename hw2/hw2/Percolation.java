@@ -2,21 +2,35 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import static org.junit.Assert.*;
+
 public class Percolation {
     /** the grid of percolation system. */
-    private int[][] grid;
+    int[][] grid;
     /** number of open sites. */
     int sizeOfOpen;
+    /** a WeightedQuickUnionUF instance. */
+    WeightedQuickUnionUF WQU;
+    /** represent the top node. */
+    int top;
+    /** represent the bottom node. */
+    int bottom;
 
     /** create N-by-N grid, with all sites initially blocked. */
     public Percolation(int N) {
         /** validate the N is greater than 0. */
         if (N < 0) {
-            throw new IllegalArgumentException(N + "is not greater or equal to 0!");
+            throw new IllegalArgumentException(N + " is not greater or equal to 0!");
         }
 
         grid = new int[N][N]; // by default each grid number is 0.
+
         sizeOfOpen = 0;
+
+        WQU = new WeightedQuickUnionUF(N * N + 2);
+
+        top = 0;
+        bottom = N * N + 1;
     }
 
     /**
@@ -31,14 +45,53 @@ public class Percolation {
         }
     }
 
+    /**
+     * private helper method.
+     *
+     * transform the 2d grid index to 1d index.
+     */
+    private int xyTo1D(int i, int j) {
+        int n = grid.length;
+        return (i * n + j + 1);
+    }
+
     /** open the site (row, col) if it is not open already. */
     public void open(int row, int col) {
         /** validate the row and col is valid index. */
         validate(row);
         validate(col);
 
-        grid[row][col] = 1;
-        sizeOfOpen += 1;
+        if (grid[row][col] != 1) {
+            grid[row][col] = 1;
+            sizeOfOpen += 1;
+
+            int N = grid.length;
+            int index = xyTo1D(row, col);
+            /**
+             * union the top, bottom and neighbor sites.
+             */
+            /** check if at top. */
+            if (index <= N) {
+                WQU.union(top, index);
+            }
+            /** check if at bottom. */
+            if (index > N * N - N) {
+                WQU.union(bottom, index);
+            }
+            /** check neighbors. */
+            if (row > 0 && isOpen(row - 1, col)) {
+                WQU.union(index, xyTo1D(row - 1, col));
+            }
+            if (row < N - 1 && isOpen(row + 1, col)) {
+                WQU.union(index, xyTo1D(row + 1, col));
+            }
+            if (col > 0 && isOpen(row, col - 1)) {
+                WQU.union(index, xyTo1D(row, col - 1));
+            }
+            if (col < N - 1 && isOpen(row, col + 1)) {
+                WQU.union(index, xyTo1D(row, col + 1));
+            }
+        }
     }
 
     /** is the site (row, col) open? */
@@ -52,7 +105,12 @@ public class Percolation {
 
     /** is the site (row, col) full? */
     public boolean isFull(int row, int col) {
-        return false;
+        /** validate the row and col is valid index. */
+        validate(row);
+        validate(col);
+
+        int index = xyTo1D(row, col);
+        return WQU.connected(index, top);
     }
 
     /** number of open sites. */
@@ -62,6 +120,29 @@ public class Percolation {
 
     /** does the system percolate? */
     public boolean percolates() {
-        return false;
+        return WQU.connected(top, bottom);
+    }
+
+    public static void main(String[] args) {
+        /** test constructor. */
+        Percolation pTest = new Percolation(10);
+        assertEquals(10, pTest.grid.length);
+
+        /** test open() isFull(), and isOpen(). */
+        pTest.open(0, 4);
+        boolean actualOpen = pTest.isOpen(0, 4);
+        assertEquals(true, actualOpen);
+        boolean actualFull = pTest.isFull(0, 4);
+        assertEquals(true, actualFull);
+        /** test numOfOpe. */
+        int actualSize = pTest.sizeOfOpen;
+        assertEquals(1, actualSize);
+
+        /** test percolates. */
+        assertFalse(pTest.percolates());
+        for (int i = 0; i < pTest.grid.length; i += 1) {
+            pTest.open(i, 4);
+        }
+        assertTrue(pTest.percolates());
     }
 }

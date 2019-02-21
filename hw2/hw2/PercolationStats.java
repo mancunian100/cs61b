@@ -1,5 +1,62 @@
 package hw2;
 
-public class PercolationStats {
+import static org.junit.Assert.*;
 
+import edu.princeton.cs.introcs.StdRandom;
+import edu.princeton.cs.introcs.StdStats;
+
+public class PercolationStats {
+    /** the T times experiments. */
+    private double[] results;
+    /** the mean fraction of open sites in computational experiment. */
+    private double mu = this.mean();
+    /** the standard deviation. */
+    private double sigma = this.stddev();
+
+
+    /** perform T independent experiments on an N-by-N grid. */
+    public PercolationStats(int N, int T, PercolationFactory pf) {
+        if (N < 0) {
+            throw new IllegalArgumentException(N + " is not greater or equal to 0!");
+        }
+
+        results = new double[T];
+
+        /** conduct T times experiments. */
+        for (int i = 0; i < T; i += 1) {
+            Percolation pi = pf.make(N);
+
+            while (!pi.percolates()) {
+                /** random open a site. */
+                int r = StdRandom.uniform(0, N);
+                int c = StdRandom.uniform(0, N);
+                pi.open(r, c);
+            }
+
+            results[i] = pi.numberOfOpenSites() / (N * N);
+        }
+
+    }
+
+    /** sample mean of percolation threshold. */
+    public double mean() {
+        return StdStats.mean(results);
+    }
+
+    /** sample standard deviation of percolation threshold. */
+    public double stddev() {
+        return StdStats.stddev(results);
+    }
+
+    /** low endpoint of 95% confidence interval. */
+    public double confidenceLow() {
+        double lowEndpoint = mu - 1.96 * sigma / Math.sqrt(results.length);
+        return lowEndpoint;
+    }
+
+    /** high endpoint of 95% confidence interval. */
+    public double confidenceHigh() {
+        double highEndpoint = mu + 1.96 * sigma / Math.sqrt(results.length);
+        return highEndpoint;
+    }
 }
