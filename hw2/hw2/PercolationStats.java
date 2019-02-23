@@ -47,10 +47,10 @@ public class PercolationStats {
             results[i] = pi.numberOfOpenSites() / (N * N);
         }
 
-        /** reserve the not-zero value in results[]. */
-        double[] temp = new double[count];
-        System.arraycopy(results, 0, temp, 0, count);
-        results = temp;
+//        /** reserve the not-zero value in results[]. */
+//        double[] temp = new double[count];
+//        System.arraycopy(results, 0, temp, 0, count);
+//        results = temp;
 
     }
 
