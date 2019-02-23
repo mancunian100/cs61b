@@ -122,8 +122,10 @@ public class Percolation {
     public boolean percolates() {
 //        return WQU.connected(top, bottom);
         int N = grid.length;
-        for (int i = N * N - N + 1; i < N * N + 1; i += 1) {
-            if (WQU.connected(top, i)) {return true;}
+        for (int i = 0; i < N; i += 1) {
+            if (WQU.connected(top, xyTo1D(N-1, i))) {
+                return true;
+            }
         }
         return false;
     }
