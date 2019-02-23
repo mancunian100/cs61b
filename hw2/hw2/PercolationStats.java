@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 public class PercolationStats {
     /** the T times experiments. */
@@ -27,7 +27,10 @@ public class PercolationStats {
             throw new IllegalArgumentException(T + " is not greater or equal to 1!");
         }
 
-//        results = new double[T];
+        results = new double[T];
+
+        /** count the times when system percolates. */
+        int count = 0;
 
         /** conduct T times experiments. */
         for (int i = 0; i < T; i += 1) {
@@ -38,10 +41,16 @@ public class PercolationStats {
                 int r = StdRandom.uniform(0, N);
                 int c = StdRandom.uniform(0, N);
                 pi.open(r, c);
+                count += 1;
             }
 
             results[i] = pi.numberOfOpenSites() / (N * N);
         }
+
+        /** reserve the not-zero value in results[]. */
+        double[] temp = new double[count];
+        System.arraycopy(results, 0, temp, 0, count);
+        results = temp;
 
     }
 
