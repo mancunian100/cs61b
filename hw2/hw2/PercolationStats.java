@@ -8,10 +8,10 @@ import edu.princeton.cs.introcs.StdStats;
 public class PercolationStats {
     /** the T times experiments. */
     private double[] results;
-    /** the mean fraction of open sites in computational experiment. */
-    private double mu = this.mean();
-    /** the standard deviation. */
-    private double sigma = this.stddev();
+//    /** the mean fraction of open sites in computational experiment. */
+//    private double mu = this.mean();
+//    /** the standard deviation. */
+//    private double sigma = this.stddev();
 
 
     /** perform T independent experiments on an N-by-N grid. */
@@ -50,13 +50,13 @@ public class PercolationStats {
 
     /** low endpoint of 95% confidence interval. */
     public double confidenceLow() {
-        double lowEndpoint = mu - 1.96 * sigma / Math.sqrt(results.length);
+        double lowEndpoint = this.mean() - 1.96 * this.stddev() / Math.sqrt(results.length);
         return lowEndpoint;
     }
 
     /** high endpoint of 95% confidence interval. */
     public double confidenceHigh() {
-        double highEndpoint = mu + 1.96 * sigma / Math.sqrt(results.length);
+        double highEndpoint = this.mean() + 1.96 * this.stddev() / Math.sqrt(results.length);
         return highEndpoint;
     }
 }
