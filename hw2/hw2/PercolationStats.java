@@ -29,8 +29,6 @@ public class PercolationStats {
 
         results = new double[T];
 
-        int count = 0;
-
         /** conduct T times experiments. */
         for (int i = 0; i < T; i += 1) {
             Percolation pi = pf.make(N);
@@ -40,11 +38,10 @@ public class PercolationStats {
                 int r = StdRandom.uniform(0, N);
                 int c = StdRandom.uniform(0, N);
                 pi.open(r, c);
-                count += 1;
             }
 
 //            results[i] = pi.numberOfOpenSites() / (N * N);
-            results[i] = count / (N * N);
+            results[i] = pi.numberOfOpenSites();
         }
 
     }
