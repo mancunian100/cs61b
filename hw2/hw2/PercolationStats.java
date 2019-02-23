@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PercolationStats {
     /** the T times experiments. */
     private double[] results;
@@ -20,7 +23,11 @@ public class PercolationStats {
             throw new IllegalArgumentException(N + " is not greater or equal to 0!");
         }
 
-        results = new double[T];
+        if (T < 1) {
+            throw new IllegalArgumentException(T + " is not greater or equal to 1!");
+        }
+
+//        results = new double[T];
 
         /** conduct T times experiments. */
         for (int i = 0; i < T; i += 1) {
