@@ -29,7 +29,6 @@ public class PercolationStats {
 
         results = new double[T];
 
-        /** count the times when system percolates. */
         int count = 0;
 
         /** conduct T times experiments. */
@@ -44,13 +43,9 @@ public class PercolationStats {
                 count += 1;
             }
 
-            results[i] = pi.numberOfOpenSites() / (N * N);
+//            results[i] = pi.numberOfOpenSites() / (N * N);
+            results[i] = count / (N * N);
         }
-
-//        /** reserve the not-zero value in results[]. */
-//        double[] temp = new double[count];
-//        System.arraycopy(results, 0, temp, 0, count);
-//        results = temp;
 
     }
 
