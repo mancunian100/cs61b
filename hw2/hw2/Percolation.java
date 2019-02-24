@@ -11,6 +11,7 @@ public class Percolation {
     private int sizeOfOpen;
     /** a WeightedQuickUnionUF instance. */
     private WeightedQuickUnionUF WQU;
+    private WeightedQuickUnionUF isFullWQU;
     /** represent the top node. */
     private int top;
     /** represent the bottom node. */
@@ -28,6 +29,7 @@ public class Percolation {
         sizeOfOpen = 0;
 
         WQU = new WeightedQuickUnionUF(N * N + 2);
+        isFullWQU = new WeightedQuickUnionUF(N * N + 2);
 
         top = 0;
         bottom = N * N + 1;
@@ -73,23 +75,28 @@ public class Percolation {
             /** check if at top. */
             if (index <= N) {
                 WQU.union(top, index);
+                isFullWQU.union(top, index);
             }
-//            /** check if at bottom. */
-//            if (index > N * N - N) {
-//                WQU.union(bottom, index);
-//            }
+            /** check if at bottom. */
+            if (index > N * N - N) {
+                WQU.union(bottom, index);
+            }
             /** check neighbors. */
             if (row > 0 && isOpen(row - 1, col)) {
                 WQU.union(index, xyTo1D(row - 1, col));
+                isFullWQU.union(index, xyTo1D(row - 1, col));
             }
             if (row < N - 1 && isOpen(row + 1, col)) {
                 WQU.union(index, xyTo1D(row + 1, col));
+                isFullWQU.union(index, xyTo1D(row + 1, col));
             }
             if (col > 0 && isOpen(row, col - 1)) {
                 WQU.union(index, xyTo1D(row, col - 1));
+                isFullWQU.union(index, xyTo1D(row, col - 1));
             }
             if (col < N - 1 && isOpen(row, col + 1)) {
                 WQU.union(index, xyTo1D(row, col + 1));
+                isFullWQU.union(index, xyTo1D(row, col + 1));
             }
         }
     }
@@ -110,7 +117,7 @@ public class Percolation {
         validate(col);
 
         int index = xyTo1D(row, col);
-        return WQU.connected(index, top);
+        return isFullWQU.connected(index, top);
     }
 
     /** number of open sites. */
@@ -120,14 +127,14 @@ public class Percolation {
 
     /** does the system percolate? */
     public boolean percolates() {
-//        return WQU.connected(top, bottom);
-        int N = grid.length;
-        for (int i = 0; i < N; i += 1) {
-            if (WQU.connected(top, xyTo1D(N - 1, i))) {
-                return true;
-            }
-        }
-        return false;
+        return WQU.connected(top, bottom);
+//        int N = grid.length;
+//        for (int i = 0; i < N; i += 1) {
+//            if (WQU.connected(top, xyTo1D(N - 1, i))) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 
     public static void main(String[] args) {
