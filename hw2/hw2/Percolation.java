@@ -151,5 +151,9 @@ public class Percolation {
             pTest.open(i, 4);
         }
         assertTrue(pTest.percolates());
+
+        /** test numOfOpe. */
+        int actualSize2 = pTest.sizeOfOpen;
+        assertEquals(10, actualSize2);
     }
 }

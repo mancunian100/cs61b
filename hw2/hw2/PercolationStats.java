@@ -40,15 +40,20 @@ public class PercolationStats {
                 pi.open(r, c);
             }
 
-//            results[i] = pi.numberOfOpenSites() / (N * N);
-            results[i] = pi.numberOfOpenSites();
+            double f = pi.numberOfOpenSites();
+            results[i] = f / (N * N);
         }
 
     }
 
     /** sample mean of percolation threshold. */
     public double mean() {
-        return StdStats.mean(results);
+//        return StdStats.mean(results);
+        double sum = 0;
+        for (double i : results) {
+            sum += i;
+        }
+        return (sum / results.length);
     }
 
     /** sample standard deviation of percolation threshold. */
