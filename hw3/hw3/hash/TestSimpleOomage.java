@@ -3,7 +3,7 @@ package hw3.hash;
 import org.junit.Test;
 
 
-import java.util.Set;
+//import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -24,14 +24,14 @@ public class TestSimpleOomage {
 
     @Test
     public void testHashCodePerfect() {
-        /* TODO: Write a test that ensures the hashCode is perfect,
+        /* Write a test that ensures the hashCode is perfect,
           meaning no two SimpleOomages should EVER have the same
           hashCode UNLESS they have the same red, blue, and green values!
          */
         HashSet<Integer> hashSimpleOomage = new HashSet<>();
-        for (int i = 0; i < 51; i += 1) {
-            for (int j = 0; j < 51; j += 1) {
-                for (int k = 0; k < 51; k += 1) {
+        for (int i = 0; i < 52; i += 1) {
+            for (int j = 0; j < 52; j += 1) {
+                for (int k = 0; k < 52; k += 1) {
                     SimpleOomage oijk = new SimpleOomage(i * 5, j * 5, k * 5);
                     Integer hashCode = oijk.hashCode();
                     assertFalse(hashSimpleOomage.contains(hashCode));
