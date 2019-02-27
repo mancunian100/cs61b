@@ -7,7 +7,7 @@ import java.util.Set;
  *  A hash table-backed Map implementation. Provides amortized constant time
  *  access to elements via get(), remove(), and put() in the best case.
  *
- *  @author Your name here
+ *  @author mancunian100
  */
 public class MyHashMap<K, V> implements Map61B<K, V> {
 
@@ -53,20 +53,44 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        if (key == null) {
+            throw new IllegalArgumentException("calls get() with null key");
+        }
+        int i = hash(key);
+        return buckets[i].get(key);
+    }
+
+    /** Returns true if this map contains a mapping for the specified key. */
+    @Override
+    public boolean containsKey(K key) {
+        if (key == null) {
+            throw new IllegalArgumentException("calls containsKey() with null key");
+        }
+        return (get(key) != null);
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (key == null) {
+            throw new IllegalArgumentException("calls put() with null key");
+        }
+        if (value == null) {
+            throw new IllegalArgumentException("calls put() with null value");
+        }
+        int i = hash(key);
+        if (!containsKey(key)) {
+            size += 1;
+        }
+        buckets[i].put(key, value);
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
+
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
 
