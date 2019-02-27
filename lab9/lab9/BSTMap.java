@@ -44,13 +44,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      * @param key th key
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public boolean containsKey(K key) {
-        if (key == null) {
-            throw new IllegalArgumentException("calls containsKey() with null key");
-        }
-        return containsKey(key, root);
-    }
-
     private boolean containsKey(K key, Node p) {
         if (p == null) {
             return false;
@@ -64,6 +57,15 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             return true;
         }
     }
+
+    @Override
+    public boolean containsKey(K key) {
+        if (key == null) {
+            throw new IllegalArgumentException("calls containsKey() with null key");
+        }
+        return containsKey(key, root);
+    }
+
 
     /** Returns the value mapped to by KEY in the subtree rooted in P.
      *  or null if this map contains no mapping for the key.
