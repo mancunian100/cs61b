@@ -75,7 +75,7 @@ public class Board implements WorldState {
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
                 int goal = i * size() + j + 1;
-                if (tileAt(i, j) != goal) {
+                if (tileAt(i, j) != goal && tileAt(i, j) != BLANK) {
                     count += 1;
                 }
             }
@@ -112,6 +112,9 @@ public class Board implements WorldState {
             return false;
         }
         Board newY = (Board) y;
+        if (newY.size() != this.size()) {
+            return false;
+        }
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
                 if (board[i][j] != newY.tileAt(i, j)) {
