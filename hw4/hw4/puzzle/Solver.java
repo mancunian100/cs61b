@@ -71,7 +71,7 @@ public class Solver {
             SearchNode F = pq.delMin();
             for (WorldState N : F.getWorldState().neighbors()) {
                 /** critical optimization. */
-                if (F.prev() == null || N != F.prev().getWorldState()) {
+                if (F.prev() == null || !N.equals(F.prev().getWorldState())) {
                     pq.insert(new SearchNode(N, F.moves() + 1, F));
                 }
             }
