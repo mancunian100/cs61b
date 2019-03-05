@@ -43,7 +43,7 @@ public class Board implements WorldState {
         int blankJ = -1;
         for (int i = 0; i < s; i += 1) {
             for (int j = 0; j < s; j += 1) {
-                if (tileAt(i, j) == 0) {
+                if (tileAt(i, j) == BLANK) {
                     blankI = i;
                     blankJ = j;
                 }
@@ -59,11 +59,11 @@ public class Board implements WorldState {
             for (int j = 0; j < s; j += 1) {
                 if (Math.abs(-blankI + i) + Math.abs(-blankJ + j) == 1) {
                     neighbor[blankI][blankJ] = neighbor[i][j];
-                    neighbor[i][j] = 0;
+                    neighbor[i][j] = BLANK;
                     Board N = new Board(neighbor);
                     neighbors.enqueue(N);
                     neighbor[i][j] = neighbor[blankI][blankJ];
-                    neighbor[blankI][blankJ] = 0;
+                    neighbor[blankI][blankJ] = BLANK;
                 }
             }
         }
@@ -87,8 +87,12 @@ public class Board implements WorldState {
         int count = 0;
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
-                int goal = i * size() + j + 1;
-                count += Math.abs(tileAt(i, j) - goal);
+                int num = tileAt(i, j);
+                if (num != BLANK) {
+                    int goalI = (num - 1) / size();
+                    int goalJ = (num - 1) % size();
+                    count += Math.abs(goalI - i) + Math.abs(goalJ - j);
+                }
             }
         }
         return count;
@@ -123,8 +127,8 @@ public class Board implements WorldState {
         return 1;
     }
 
-    /** Returns the string representation of the board. 
-      * Uncomment this method. */
+    /** Returns the string representation of the board.
+     * Uncomment this method. */
     public String toString() {
         StringBuilder s = new StringBuilder();
         int N = size();
