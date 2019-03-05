@@ -83,7 +83,7 @@ public class Board implements WorldState {
         return count;
     }
 
-    public int manhatten() {
+    public int manhattan() {
         int count = 0;
         for (int i = 0; i < size(); i += 1) {
             for (int j = 0; j < size(); j += 1) {
@@ -100,7 +100,7 @@ public class Board implements WorldState {
 
     @Override
     public int estimatedDistanceToGoal() {
-        return manhatten();
+        return manhattan();
     }
 
     @Override
