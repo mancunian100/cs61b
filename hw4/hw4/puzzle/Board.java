@@ -1,6 +1,5 @@
 package hw4.puzzle;
 
-import edu.princeton.cs.algs4.BlackFilter;
 import edu.princeton.cs.algs4.Queue;
 
 public class Board implements WorldState {
@@ -39,32 +38,32 @@ public class Board implements WorldState {
     @Override
     public Iterable<WorldState> neighbors() {
         Queue<WorldState> neighbors = new Queue<>();
-        int size = size();
+        int s = size();
         int blankI = -1;
         int blankJ = -1;
-        for (int i = 0; i < size; i += 1) {
-            for (int j = 0; j < size; j += 1) {
-                if (tileAt(i, j) == BLANK) {
+        for (int i = 0; i < s; i += 1) {
+            for (int j = 0; j < s; j += 1) {
+                if (tileAt(i, j) == 0) {
                     blankI = i;
                     blankJ = j;
                 }
             }
         }
-        int[][] neighbor = new int[size][size];
-        for (int i = 0; i < size; i += 1) {
-            for (int j = 0; j < size; j += 1) {
+        int[][] neighbor = new int[s][s];
+        for (int i = 0; i < s; i += 1) {
+            for (int j = 0; j < s; j += 1) {
                 neighbor[i][j] = tileAt(i, j);
             }
         }
-        for (int i = 0; i < size; i += 1) {
-            for (int j = 0; j < size; j += 1) {
+        for (int i = 0; i < s; i += 1) {
+            for (int j = 0; j < s; j += 1) {
                 if (Math.abs(-blankI + i) + Math.abs(-blankJ + j) == 1) {
                     neighbor[blankI][blankJ] = neighbor[i][j];
-                    neighbor[i][j] = BLANK;
+                    neighbor[i][j] = 0;
                     Board N = new Board(neighbor);
                     neighbors.enqueue(N);
                     neighbor[i][j] = neighbor[blankI][blankJ];
-                    neighbor[blankI][blankJ] = BLANK;
+                    neighbor[blankI][blankJ] = 0;
                 }
             }
         }
@@ -132,7 +131,7 @@ public class Board implements WorldState {
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }

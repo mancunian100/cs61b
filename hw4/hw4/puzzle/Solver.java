@@ -3,8 +3,6 @@ package hw4.puzzle;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 
-import java.lang.reflect.WildcardType;
-
 /**
  * A* search algorithm implementation solver
  *
