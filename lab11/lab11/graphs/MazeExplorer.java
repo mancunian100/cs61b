@@ -6,7 +6,9 @@ import java.util.Observable;
  * @author Josh Hug
  */
 public abstract class MazeExplorer extends Observable {
+    /* the number shown on the screen. */
     protected int[] distTo;
+    /* the next vertex. */
     protected int[] edgeTo;
     protected boolean[] marked;
     protected Maze maze;
