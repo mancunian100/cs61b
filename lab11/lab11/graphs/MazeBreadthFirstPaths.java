@@ -1,6 +1,7 @@
 package lab11.graphs;
 
-import java.util.HashSet;
+import java.util.Queue;
+import java.util.ArrayDeque;
 
 /**
  *  @author Josh Hug
@@ -15,6 +16,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
     private int t;
     private boolean targetFound = false;
     private Maze maze;
+    private Queue<Integer> heads;
 
 
     public MazeBreadthFirstPaths(Maze m, int sourceX, int sourceY, int targetX, int targetY) {
@@ -31,36 +33,26 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
         marked[v] = true;
         announce();
 
-        if (v == t) {
-            targetFound = true;
-        }
-        if (targetFound) {
-            return;
-        }
-
         /** arrays for storing the searching heads. */
-        HashSet<Integer> heads = new HashSet<>();
+        heads = new ArrayDeque<>();
         heads.add(v);
 
-        while (!targetFound) {
-            HashSet<Integer> temp = new HashSet<>();
-
-            for (int h : heads) {
-                if (h == t) {
-                    targetFound = true;
-                    return;
-                }
-                for (int neighbor : maze.adj(h)) {
-                    if (!marked[neighbor]) {
-                        temp.add(neighbor);
-                        distTo[neighbor] = distTo[h] + 1;
-                        edgeTo[neighbor] = h;
-                        announce();
-                        marked[neighbor] = true;
+        while (!heads.isEmpty()) {
+            int h = heads.remove();
+            for (int neighbor : maze.adj(h)) {
+                if (!marked[neighbor]) {
+                    heads.add(neighbor);
+                    marked[neighbor] = true;
+                    edgeTo[neighbor] = h;
+                    distTo[neighbor] = distTo[h] + 1;
+                    announce();
+                    if (neighbor == t) {
+                        targetFound = true;
+                        return;
                     }
+                    // draw before determining if reaching target;
                 }
             }
-            heads = temp;
         }
 
     }
