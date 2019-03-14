@@ -219,15 +219,6 @@ public class GraphDB {
         }
     }
 
-//    /**
-//     * delet a node which has id.
-//     * @param id the node to be deleted.
-//     */
-//    void deletNode(long id) {
-//        this.nodes.remove(id);
-//        // not finished.
-//    }
-
     /**
      * nested Node class.
      */
