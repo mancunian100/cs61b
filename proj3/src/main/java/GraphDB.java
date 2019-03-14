@@ -8,6 +8,14 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 
+import java.util.HashMap;
+import java.util.HashSet;
+//import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
  * Uses your GraphBuildingHandler to convert the XML files into a graph. Your
@@ -20,6 +28,9 @@ import java.util.ArrayList;
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
+
+    private final Map<Long, Node> nodes = new LinkedHashMap<>();
+    private final Map<Long, Way> ways = new LinkedHashMap<>();
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -57,7 +68,18 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        if (nodes.size() != 0) {
+            List<Long> isoNodes = new ArrayList<>();
+            for (long id : nodes.keySet()) {
+                Node node = nodes.get(id);
+                if (node.adjacency.size() == 0) {
+                    isoNodes.add(id);
+                }
+            }
+            for (long id : isoNodes) {
+                nodes.remove(id);
+            }
+        }
     }
 
     /**
@@ -66,7 +88,7 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return nodes.keySet();
     }
 
     /**
@@ -75,7 +97,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return nodes.get(v).adjacency;
     }
 
     /**
@@ -136,7 +158,17 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        double d = Double.MAX_VALUE;
+        long closestId = -1;
+        for (long id : nodes.keySet()) {
+            double idlon = lon(id);
+            double idlat = lat(id);
+            if (distance(lon, lat, idlon, idlat) < d) {
+                closestId = id;
+                d = distance(lon, lat, idlon, idlat);
+            }
+        }
+        return closestId;
     }
 
     /**
@@ -145,7 +177,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return nodes.get(v).lon;
     }
 
     /**
@@ -154,6 +186,79 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return nodes.get(v).lat;
+    }
+
+    /**
+     * insert a node to this graph.
+     * @param id the node id.
+     * @param node the node to be inserted.
+     */
+    void insertNode(long id, Node node) {
+        this.nodes.put(id, node);
+    }
+
+    /**
+     * insert a way to this graph.
+     * @param id the way id.
+     * @param way the way to be inserted.
+     */
+    void insertWay(long id, Way way) {
+        this.ways.put(id, way);
+    }
+
+    /**
+     * connect two nodes
+     * @param id1 connect node1
+     * @param id2 connect node2
+     */
+    void connectNodes(long id1, long id2) {
+        if (nodes.containsKey(id1) && nodes.containsKey(id2)) {
+            nodes.get(id1).adjacency.add(id2);
+            nodes.get(id2).adjacency.add(id1);
+        }
+    }
+
+//    /**
+//     * delet a node which has id.
+//     * @param id the node to be deleted.
+//     */
+//    void deletNode(long id) {
+//        this.nodes.remove(id);
+//        // not finished.
+//    }
+
+    /**
+     * nested Node class.
+     */
+    static class Node  {
+        long id;
+        double lon;
+        double lat;
+        Set<Long> adjacency;
+        Map<String, String> infos;
+
+        Node(long id, double lon, double lat) {
+            this.id = id;
+            this.lon = lon;
+            this.lat = lat;
+            adjacency = new HashSet<>();
+            infos = new HashMap<>();
+        }
+    }
+
+    /**
+     * nested Way class.
+     */
+    static class Way {
+        long id;
+        List<Long> wayNodes;
+        Map<String, String> infos;
+
+        Way(long id) {
+            this.id  = id;
+            wayNodes = new ArrayList<>();
+            infos = new HashMap<>();
+        }
     }
 }

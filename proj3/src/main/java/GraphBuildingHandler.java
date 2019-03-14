@@ -4,6 +4,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,6 +39,10 @@ public class GraphBuildingHandler extends DefaultHandler {
                     "secondary_link", "tertiary_link"));
     private String activeState = "";
     private final GraphDB g;
+    /** valid flag. */
+    private boolean validWay = false;
+    private GraphDB.Way way;
+    private GraphDB.Node node;
 
     /**
      * Create a new GraphBuildingHandler.
@@ -45,6 +50,8 @@ public class GraphBuildingHandler extends DefaultHandler {
      */
     public GraphBuildingHandler(GraphDB g) {
         this.g = g;
+        node = null;
+        way = null;
     }
 
     /**
@@ -64,55 +71,70 @@ public class GraphBuildingHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException {
+        /* set the valid flag. */
         /* Some example code on how you might begin to parse XML files. */
         if (qName.equals("node")) {
             /* We encountered a new <node...> tag. */
             activeState = "node";
-            System.out.println("Node id: " + attributes.getValue("id"));
-            System.out.println("Node lon: " + attributes.getValue("lon"));
-            System.out.println("Node lat: " + attributes.getValue("lat"));
+//            System.out.println("Node id: " + attributes.getValue("id"));
+//            System.out.println("Node lon: " + attributes.getValue("lon"));
+//            System.out.println("Node lat: " + attributes.getValue("lat"));
 
-            /* TODO Use the above information to save a "node" to somewhere. */
             /* Hint: A graph-like structure would be nice. */
+            /** insert this node to graph g. */
+            long id = Long.parseLong(attributes.getValue("id"));
+            double lon = Double.parseDouble(attributes.getValue("lon"));
+            double lat = Double.parseDouble(attributes.getValue("lat"));
+            node = new GraphDB.Node(id, lon, lat);
+            g.insertNode(id, node);
 
         } else if (qName.equals("way")) {
             /* We encountered a new <way...> tag. */
             activeState = "way";
-            System.out.println("Beginning a way...");
+//            System.out.println("Beginning a way...");
+
+            /** store a way determine if it is valid. */
+            long id = Long.parseLong(attributes.getValue("id"));
+            way = new GraphDB.Way(id);
         } else if (activeState.equals("way") && qName.equals("nd")) {
             /* While looking at a way, we found a <nd...> tag. */
-            System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
+//            System.out.println("Id of a node in this way: " + attributes.getValue("ref"));
 
-            /* TODO Use the above id to make "possible" connections between the nodes in this way */
             /* Hint1: It would be useful to remember what was the last node in this way. */
             /* Hint2: Not all ways are valid. So, directly connecting the nodes here would be
             cumbersome since you might have to remove the connections if you later see a tag that
             makes this way invalid. Instead, think of keeping a list of possible connections and
             remember whether this way is valid or not. */
+            long id = Long.parseLong(attributes.getValue("ref"));
+            way.wayNodes.add(id);
 
         } else if (activeState.equals("way") && qName.equals("tag")) {
             /* While looking at a way, we found a <tag...> tag. */
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                //System.out.println("Max Speed: " + v);
-                /* TODO set the max speed of the "current way" here. */
+                System.out.println("Max Speed: " + v);
             } else if (k.equals("highway")) {
-                System.out.println("Highway type: " + v);
-                /* TODO Figure out whether this way and its connections are valid. */
+//                System.out.println("Highway type: " + v);
                 /* Hint: Setting a "flag" is good enough! */
+                if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
+                    validWay = true;
+                }
             } else if (k.equals("name")) {
                 System.out.println("Way Name: " + v);
             }
-            System.out.println("Tag with k=" + k + ", v=" + v + ".");
+            way.infos.put(k, v);
+//            System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                 .equals("name")) {
             /* While looking at a node, we found a <tag...> with k="name". */
-            /* TODO Create a location. */
             /* Hint: Since we found this <tag...> INSIDE a node, we should probably remember which
             node this tag belongs to. Remember XML is parsed top-to-bottom, so probably it's the
             last node that you looked at (check the first if-case). */
-            System.out.println("Node's name: " + attributes.getValue("v"));
+
+            String name = attributes.getValue("name");
+            node.infos.put("name", name);
+//            System.out.println("Node's name: " + attributes.getValue("name"));
         }
     }
 
@@ -133,7 +155,22 @@ public class GraphBuildingHandler extends DefaultHandler {
             /* We are done looking at a way. (We finished looking at the nodes, speeds, etc...)*/
             /* Hint1: If you have stored the possible connections for this way, here's your
             chance to actually connect the nodes together if the way is valid. */
-            System.out.println("Finishing a way...");
+            /** if this is a valid way. */
+            if (validWay) {
+                /** insert this valid way. */
+                g.insertWay(way.id, way);
+//                System.out.println("Inserting way: " + way.id);
+                /** connect this way's nodes. */
+                List<Long> N = way.wayNodes;
+                for (int i = 0; i < N.size() - 1; i += 1) {
+                    long id1 = N.get(i);
+                    long id2 = N.get(i + 1);
+                    g.connectNodes(id1, id2);
+//                    System.out.println("Connecting two nodes: " + id1 + " and " + id2);
+                }
+                validWay = false;
+            }
+//            System.out.println("Finishing a way...");
         }
     }
 
