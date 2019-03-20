@@ -6,7 +6,6 @@ import java.util.HashSet;
 import static org.junit.Assert.assertEquals;
 
 /**
- * created by hug 4/9/2018
  * Basic sanity check for your GraphDB construction on a tiny clean input graph.
  */
 public class TestGraphBuildingTiny {

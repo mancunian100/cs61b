@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Basic sanity check for your GraphDB construction. This test simply tests a small number of
- * hard coded queries, but if you get them right, your GraphDB class is probably correct.
+ * hard coded queries.
  */
 public class TestGraphBuilding {
     private static GraphDB graph;

@@ -86,7 +86,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             double lon = Double.parseDouble(attributes.getValue("lon"));
             double lat = Double.parseDouble(attributes.getValue("lat"));
             node = new GraphDB.Node(id, lon, lat);
-            g.insertNode(id, node);
+//            g.insertNode(id, node);
 
         } else if (qName.equals("way")) {
             /* We encountered a new <way...> tag. */
@@ -113,7 +113,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
-                System.out.println("Max Speed: " + v);
+//                System.out.println("Max Speed: " + v);
             } else if (k.equals("highway")) {
 //                System.out.println("Highway type: " + v);
                 /* Hint: Setting a "flag" is good enough! */
@@ -121,7 +121,7 @@ public class GraphBuildingHandler extends DefaultHandler {
                     validWay = true;
                 }
             } else if (k.equals("name")) {
-                System.out.println("Way Name: " + v);
+//                System.out.println("Way Name: " + v);
             }
             way.infos.put(k, v);
 //            System.out.println("Tag with k=" + k + ", v=" + v + ".");
@@ -132,9 +132,10 @@ public class GraphBuildingHandler extends DefaultHandler {
             node this tag belongs to. Remember XML is parsed top-to-bottom, so probably it's the
             last node that you looked at (check the first if-case). */
 
-            String name = attributes.getValue("name");
+            String name = attributes.getValue("v");
             node.infos.put("name", name);
-//            System.out.println("Node's name: " + attributes.getValue("name"));
+            g.search.add(node.infos.get("name"), node.id);
+//            System.out.println("Node's name: " + name);
         }
     }
 
@@ -171,6 +172,9 @@ public class GraphBuildingHandler extends DefaultHandler {
                 validWay = false;
             }
 //            System.out.println("Finishing a way...");
+        }
+        if (qName.equals("node")) {
+            g.insertNode(node.id, node);
         }
     }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.HashSet;
-//import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -29,8 +29,10 @@ public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
-    private final Map<Long, Node> nodes = new LinkedHashMap<>();
-    private final Map<Long, Way> ways = new LinkedHashMap<>();
+    Map<Long, Node> nodes;
+    Map<Long, Way> ways;
+    Map<Long, Node> removedNodes;
+    Trie search = new Trie();
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -38,6 +40,8 @@ public class GraphDB {
      * @param dbPath Path to the XML file to be parsed.
      */
     public GraphDB(String dbPath) {
+        nodes = new LinkedHashMap<>();
+        ways = new LinkedHashMap<>();
         try {
             File inputFile = new File(dbPath);
             FileInputStream inputStream = new FileInputStream(inputFile);
@@ -69,14 +73,16 @@ public class GraphDB {
      */
     private void clean() {
         if (nodes.size() != 0) {
-            List<Long> isoNodes = new ArrayList<>();
+//            List<Long> isoNodes = new ArrayList<>();
+            removedNodes = new HashMap<>();
             for (long id : nodes.keySet()) {
                 Node node = nodes.get(id);
                 if (node.adjacency.size() == 0) {
-                    isoNodes.add(id);
+//                    isoNodes.add(id);
+                    removedNodes.put(id, node);
                 }
             }
-            for (long id : isoNodes) {
+            for (long id : removedNodes.keySet()) {
                 nodes.remove(id);
             }
         }
@@ -250,6 +256,110 @@ public class GraphDB {
             this.id  = id;
             wayNodes = new ArrayList<>();
             infos = new HashMap<>();
+        }
+    }
+
+    /** nested Ties class. */
+    public class Trie {
+        TrieNode root;
+        public Trie() {
+            root = new TrieNode();
+        }
+        public class TrieNode {
+            boolean exists;
+            Map<Character, TrieNode> links;
+            List<String> fullName; //prevent collision
+            Set<Long> locationID;
+            public TrieNode() {
+                links = new HashMap<>();
+                exists = false;
+                fullName = null;
+                locationID = null;
+            }
+        }
+
+        public void add(String name, long id) {
+            String cleaned = cleanString(name);
+            char[] working = cleaned.toCharArray();
+            TrieNode current = root;
+
+            if (cleaned.equals("")) { //edge case for numbered names
+                current.exists = true;
+                if (current.fullName == null) {
+                    current.fullName = new ArrayList<>();
+                }
+                current.fullName.add(name);
+                if (current.locationID == null) {
+                    current.locationID = new HashSet<>();
+                }
+                current.locationID.add(id);
+            }
+
+            int endCount = 0;
+            for (char i: working) {
+                endCount += 1;
+                if (current.links.containsKey(i)) {
+                    current = current.links.get(i);
+                } else {
+                    current.links.put(i, new TrieNode());
+                    current = current.links.get(i);
+                }
+                if (endCount == working.length) { // last node
+                    current.exists = true;
+                    if (current.fullName == null) { //save memory
+                        current.fullName = new ArrayList<>();
+                    }
+                    current.fullName.add(name);
+                    if (current.locationID == null) {
+                        current.locationID = new HashSet<>();
+                    }
+                    current.locationID.add(id);
+                }
+            }
+        }
+
+        //retrieve all strings children of this node
+        public void retrieve(TrieNode a, Set<String> result) {
+            if (a.exists) {
+                for (String i: a.fullName) {
+                    result.add(i);
+                }
+
+            }
+            for (char i: a.links.keySet()) {
+                retrieve(a.links.get(i), result);
+            }
+        }
+        public List<String> find(String prefix) {
+            String cleaned = cleanString(prefix);
+            char[] working = cleaned.toCharArray();
+            TrieNode current = root;
+            for (char i: working) {
+                if (current.links.containsKey(i)) {
+                    current = current.links.get(i);
+                } else if (current.links.containsKey(Character.toUpperCase(i))) {
+                    current = current.links.get(Character.toUpperCase(i));
+                } else {
+                    return null;
+                }
+            }
+            //current is now node at last letter, prefix is available
+            Set<String> result = new HashSet<>();
+            retrieve(current, result);
+            return new LinkedList<>(result);
+        }
+
+        public TrieNode findTrieNode(String name) {
+            char[] working = name.toCharArray();
+            TrieNode current = root;
+            for (char i: working) {
+                if (current.links.containsKey(i)) {
+                    current = current.links.get(i);
+                }  else {
+                    return null;
+                }
+            }
+            return current;
         }
     }
 }

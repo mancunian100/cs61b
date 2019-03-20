@@ -7,7 +7,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by hug, 4/9/2018. Basic tests for A* on the tiny graph.
  * This graph is so small you can draw it out by hand and visually inspect the results!
  */
 public class TestRouterTiny {

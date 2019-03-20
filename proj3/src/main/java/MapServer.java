@@ -36,6 +36,8 @@ public class MapServer {
      */
     public static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
             ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
+//    public static final double ROOT_ULLAT = 31.05293398570515, ROOT_ULLON = 121.376953125,
+//            ROOT_LRLAT = 30.97760909334868, ROOT_LRLON = 121.46484375;
     /** Each tile is 256x256 pixels. */
     public static final int TILE_SIZE = 256;
     /** HTTP failed response. */
@@ -46,11 +48,13 @@ public class MapServer {
     public static final Color ROUTE_STROKE_COLOR = new Color(108, 181, 230, 200);
     /** The tile images are in the IMG_ROOT folder. */
     private static final String IMG_ROOT = "../library-sp18/data/proj3_imgs/";
+//    private static final String IMG_ROOT = "../library-sp18/data/imgs/";
     /**
      * The OSM XML file path. Downloaded from <a href="http://download.bbbike.org/osm/">here</a>
      * using custom region selection.
      **/
     private static final String OSM_DB_PATH = "../library-sp18/data/berkeley-2018.osm.xml";
+//    private static final String OSM_DB_PATH = "../library-sp18/data/sjtu_osm.xml";
     /**
      * Each raster request to the server will have the following parameters
      * as keys in the params map accessible by,
@@ -285,7 +289,7 @@ public class MapServer {
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        return graph.search.find(prefix);
     }
 
     /**
@@ -301,7 +305,25 @@ public class MapServer {
      * "id" : Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        List<Map<String, Object>> locations = new LinkedList<>();
+        String cleaned = GraphDB.cleanString(locationName);
+        GraphDB.Trie.TrieNode node = graph.search.findTrieNode(cleaned);
+        if (node == null || node.locationID == null) {
+            return locations;
+        }
+        for (long id : node.locationID) {
+            GraphDB.Node temp = graph.nodes.get(id);
+            if (temp == null) {
+                temp = graph.removedNodes.get(id);
+            }
+            Map<String, Object> item = new HashMap<>();
+            item.put("lat", temp.lat);
+            item.put("lon", temp.lon);
+            item.put("name", temp.infos.get("name"));
+            item.put("id", id);
+            locations.add(item);
+        }
+        return locations;
     }
 
     /**

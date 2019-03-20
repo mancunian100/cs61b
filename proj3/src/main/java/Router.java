@@ -3,6 +3,13 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.Stack;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+
 /**
  * This class provides a shortestPath method for finding routes between two points
  * on the map. Start by using Dijkstra's, and if your code isn't fast enough for your
@@ -12,6 +19,8 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+
+
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -25,7 +34,68 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        /** A star algorithm to get the shortest path. */
+        long startNd = g.closest(stlon, stlat);
+        long destNd = g.closest(destlon, destlat);
+
+        /** nested class SearchNode. */
+        class SearchNode implements Comparable<SearchNode> {
+            long node;
+            double disFromStart;
+            SearchNode prev;
+            double priority;
+
+            SearchNode(long n, double d, SearchNode p) {
+                node = n;
+                disFromStart = d;
+                prev = p;
+                priority = d + g.distance(n, destNd);
+            }
+
+            @Override
+            public int compareTo(SearchNode s) {
+                int c = 0;
+                if ((this.priority - s.priority) > 0) {
+                    c = 1;
+                } else if ((this.priority - s.priority) == 0) {
+                    c = 0;
+                } else if ((this.priority - s.priority) < 0) {
+                    c = -1;
+                }
+                return c;
+            }
+        }
+
+        /** stack for storing the path node. */
+        Stack<Long> path = new Stack<>();
+        /** priority for A star. */
+        Queue pq = new PriorityQueue();
+        /** passed nodes. */
+        Set<Long> passed = new HashSet<>();
+        passed.add(startNd);
+        pq.add(new SearchNode(startNd, 0, null));
+
+        SearchNode presNd = (SearchNode) pq.peek();
+        while (presNd.node != destNd) {
+            for(long n : g.adjacent(presNd.node)) {
+                if (presNd.prev == null || !passed.contains(n)) {
+                    double disOfpn = g.distance(presNd.node, n);
+                    pq.add(new SearchNode(n, presNd.disFromStart + disOfpn, presNd));
+                }
+            }
+            passed.add(presNd.node);
+            presNd = (SearchNode) pq.poll();
+        }
+
+        while (presNd != null) {
+            path.push(presNd.node);
+            presNd = presNd.prev;
+        }
+        Stack<Long> results = new Stack<>();
+        while (path.size() != 0) {
+            results.push(path.pop());
+        }
+        return results;
     }
 
     /**
@@ -37,7 +107,12 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+        List<NavigationDirection> directions = new ArrayList<>();
+        if (route == null || route.isEmpty()) {
+            return null;
+        }
+
+        return null;
     }
 
 
@@ -160,4 +235,5 @@ public class Router {
             return Objects.hash(direction, way, distance);
         }
     }
+
 }

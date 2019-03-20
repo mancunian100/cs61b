@@ -21,6 +21,10 @@ $(function() {
         ullon: -122.27625,
         lrlat: 37.83,
         lrlon: -122.22,
+        // ullat: 31.05293398570515,
+        // ullon: 121.376953125,
+        // lrlat: 30.97760909334868,
+        // lrlon: 121.46484375,
         w: $body.width(),
         h: $body.height()
     };
