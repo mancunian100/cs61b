@@ -113,6 +113,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             String k = attributes.getValue("k");
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
+                int a = 0;
 //                System.out.println("Max Speed: " + v);
             } else if (k.equals("highway")) {
 //                System.out.println("Highway type: " + v);
@@ -121,6 +122,7 @@ public class GraphBuildingHandler extends DefaultHandler {
                     validWay = true;
                 }
             } else if (k.equals("name")) {
+                int b = 0;
 //                System.out.println("Way Name: " + v);
             }
             way.infos.put(k, v);

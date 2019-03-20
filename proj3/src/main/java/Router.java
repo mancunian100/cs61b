@@ -77,7 +77,7 @@ public class Router {
 
         SearchNode presNd = (SearchNode) pq.peek();
         while (presNd.node != destNd) {
-            for(long n : g.adjacent(presNd.node)) {
+            for (long n : g.adjacent(presNd.node)) {
                 if (presNd.prev == null || !passed.contains(n)) {
                     double disOfpn = g.distance(presNd.node, n);
                     pq.add(new SearchNode(n, presNd.disFromStart + disOfpn, presNd));

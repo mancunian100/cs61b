@@ -61,25 +61,20 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-
         /** read the params. */
         double queryBoxUllon = params.get("ullon");
         double queryBoxLrlon = params.get("lrlon");
         double queryBoxWidth = params.get("w");
-
         /** LonDPP of the query box. */
         double queryBoxLonDPP = (queryBoxLrlon - queryBoxUllon) / queryBoxWidth;
-
         /** depth of pictures. */
         int depth = 0;
-
         /** select the appropriate level of picture. */
         for (; depth <= 7; depth += 1) {
             if (depth == 7 || lonDPPs[depth] <= queryBoxLonDPP) {
                 break;
             }
         }
-
         /** LonDPP selected. */
         double resultLonDPP = lonDPPs[depth];
         double resultLatDPP = latDPPs[depth];
