@@ -89,7 +89,8 @@ public class MergeSort {
         }
         items2 = items;
 
-        return mergeSortedQueues(mergeSort(items1), mergeSort(items2));
+        items = mergeSortedQueues(mergeSort(items1), mergeSort(items2));
+        return items;
     }
 
     public static void main(String[] args) {
