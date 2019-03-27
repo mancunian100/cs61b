@@ -43,6 +43,7 @@ public class GraphBuildingHandler extends DefaultHandler {
     private boolean validWay = false;
     private GraphDB.Way way;
     private GraphDB.Node node;
+    private String wayname;
 
     /**
      * Create a new GraphBuildingHandler.
@@ -122,7 +123,7 @@ public class GraphBuildingHandler extends DefaultHandler {
                     validWay = true;
                 }
             } else if (k.equals("name")) {
-                int b = 0;
+                wayname = v;
 //                System.out.println("Way Name: " + v);
             }
             way.infos.put(k, v);
@@ -170,6 +171,10 @@ public class GraphBuildingHandler extends DefaultHandler {
                     long id2 = N.get(i + 1);
                     g.connectNodes(id1, id2);
 //                    System.out.println("Connecting two nodes: " + id1 + " and " + id2);
+                }
+                /** mark the way node with this way name. */
+                for (long id : way.wayNodes) {
+                    g.nodes.get(id).infos.put("wayName", wayname);
                 }
                 validWay = false;
             }

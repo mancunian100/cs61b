@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * This class provides a shortestPath method for finding routes between two points
@@ -107,12 +107,60 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        List<NavigationDirection> directions = new ArrayList<>();
-        if (route == null || route.isEmpty()) {
-            return null;
-        }
+        List<NavigationDirection> directions = new LinkedList<>();
+        boolean start = true;
+        long prevNode = route.get(0);
+        double distance = 0;
 
-        return null;
+        NavigationDirection temp = new NavigationDirection();
+        temp.direction = NavigationDirection.START;
+        temp.way = g.nodes.get(route.get(0)).infos.get("wayName");
+
+        for (Long l : route) {
+            if (g.nodes.get(l).infos.get("wayName").equals(temp.way)) {
+                distance += g.distance(prevNode, l);
+            } else {
+                distance += g.distance(prevNode, l);
+                temp.distance = distance;
+                directions.add(temp);
+
+                temp = new NavigationDirection();
+                temp.direction = getDirectionInt(g.bearing(prevNode, l));
+                if (g.nodes.get(l).infos.get("wayName") == null) {
+                    temp.way = NavigationDirection.UNKNOWN_ROAD;
+                } else {
+                    temp.way = g.nodes.get(l).infos.get("wayName");
+                }
+                distance = 0;
+            }
+
+            prevNode = l;
+        }
+        return directions;
+    }
+
+    private static int getDirectionInt(double bearing) {
+        if (bearing > -15 && bearing < 15) {
+            return 1;
+        } else if (bearing > -30 && bearing < 30) {
+            if (bearing < 0) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else if (bearing > -100 && bearing < 100) {
+            if (bearing < 0) {
+                return 4;
+            } else {
+                return 5;
+            }
+        } else {
+            if (bearing < 0) {
+                return 6;
+            } else {
+                return 7;
+            }
+        }
     }
 
 
