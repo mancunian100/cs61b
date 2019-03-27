@@ -1,5 +1,5 @@
 import edu.princeton.cs.algs4.Queue;
-import edu.princeton.cs.algs4.Quick;
+//import edu.princeton.cs.algs4.Quick;
 
 public class QuickSort {
     /**
