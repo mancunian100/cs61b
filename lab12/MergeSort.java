@@ -75,7 +75,7 @@ public class MergeSort {
             Queue<Item> items) {
         // Your code here!
 
-        if (items.size() == 1) {
+        if (items.size() == 1 || items.isEmpty()) {
             return items;
         } else if (items.size() == 2) {
             Queue<Queue<Item>> newItems = makeSingleItemQueues(items);
@@ -101,13 +101,6 @@ public class MergeSort {
         unsorted.enqueue(4);
 
         System.out.println("unsorted queue is: " + unsorted);
-
-//        Queue<Integer> sorted = new Queue<>();
-//        sorted.enqueue(1);
-//        sorted.enqueue(2);
-//        sorted.enqueue(3);
-//        sorted.enqueue(4);
-//        sorted.enqueue(5);
 
         Queue<Integer> actual = MergeSort.mergeSort(unsorted);
         System.out.println("sorted queue is: " + actual);
