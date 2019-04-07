@@ -4,6 +4,10 @@
  * @author Akhil Batra, Alexander Hwang
  *
  */
+
+import java.util.Queue;
+import java.util.LinkedList;
+
 public class RadixSort {
     /**
      * Does LSD radix sort on the passed in array with the following restrictions:
@@ -76,74 +80,50 @@ public class RadixSort {
 //        sortHelperLSD(asciis, index - 1);
 //    }
 
-
     public static String[] sort(String[] asciis) {
+        Queue<String>[] buckets = new Queue[256];
+        for (int i = 0; i < 256; i++)
+            buckets[i] = new LinkedList();
 
-        String[] sorted = new String[asciis.length];
-        System.arraycopy(asciis, 0, sorted, 0, asciis.length);
+        boolean sorted = false;
+        int lengthInc = 0;
 
-        // get the maximum length of string in asciis
-        int max = 0;
-        for (String asc : asciis) {
-            max = max > asc.length() ? max : asc.length();
-        }
+        String[] sortedArr = new String[asciis.length];
+        System.arraycopy(asciis, 0, sortedArr, 0, asciis.length);
 
-        int index = 0;
-        while (index < max) {
-            sorted = sortHelperLSD(sorted, index);
-            index += 1;
-        }
+        while (!sorted) {
+            sorted = true;
 
-        return sorted;
-    }
-
-
-    /**
-     * LSD helper method that performs a destructive counting sort the array of
-     * Strings based off characters at a specific index.
-     * @param asciis Input array of Strings
-     * @param index The position to sort the Strings on.
-     */
-    private static String[] sortHelperLSD(String[] asciis, int index) {
-        // Optional LSD helper method for required LSD radix sort
-
-        // buckets for inserting number of "digits"
-        int[] buckets = new int[256];
-        String[] sorted = new String[asciis.length];
-
-        // counting process
-        for (String a : asciis) {
-            int pos = (int) a.charAt(a.length() - index - 1);
-            buckets[pos] += 1;
-        }
+            for (String item : sortedArr) {
+                int index = item.length() - lengthInc - 1;
+                if (index >= 0) {
+                    sorted = false;
+                    int ofASCII = (int) item.charAt(index);
+                    buckets[ofASCII].add(item);
+                } else {
+                    buckets[(int) item.charAt(0)].add(item);
+                }
 
 
-        // adjust buckets number
-        int prev = 0;
-        for (int i = 0; i < 256; i++) {
-            if (buckets[i] > 0) {
-                buckets[i] += prev;
-                prev = buckets[i];
             }
-        }
 
+            lengthInc++;
+            int index = 0;
 
-        // re-order the asciis array in sorted array
-        for (int numString = asciis.length - 1; numString >= 0; numString -= 1) {
-            // int number of character at particular position
-            int num = (int) asciis[numString].charAt(asciis[numString].length() - index - 1);
+            for (Queue<String> bucket : buckets) {
+                while (!bucket.isEmpty()) {
+                    sortedArr[index] = bucket.remove();
+                    index++;
+                }
+            }
 
-            // index of that String in sorted array
-            buckets[num] -= 1;
-            int pos = buckets[num];
-
-            // move that String to the new array
-            sorted[pos] = asciis[numString];
+            //System.out.println();
 
         }
 
-        return sorted;
+        //System.out.println("");
 
+        return sortedArr;
     }
 
     /**
